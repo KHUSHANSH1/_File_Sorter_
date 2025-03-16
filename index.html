@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Sorter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-sort"></i> File Sorter</h1>
+            <p>Upload your files and get them sorted automatically</p>
+        </header>
+        
+        <main>
+            <div class="upload-container">
+                <div class="upload-area" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h2>Drag & Drop Files Here</h2>
+                    <p>or</p>
+                    <label for="fileInput" class="upload-btn">Browse Files</label>
+                    <input type="file" id="fileInput" multiple hidden>
+                </div>
+                
+                <div class="file-list-container">
+                    <div class="file-list-header">
+                        <h3>Uploaded Files</h3>
+                        <div class="search-container">
+                            <input type="text" id="fileSearch" placeholder="Search files...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <ul id="fileList" class="file-list"></ul>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="sortBtn" class="sort-btn">
+                        <i class="fas fa-magic"></i> Sort Files
+                    </button>
+                    <button id="bulkDownloadBtn" class="bulk-download-btn">
+                        <i class="fas fa-download"></i> Bulk Download
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        <div id="sortedFilesModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Sorted Files</h2>
+                
+                <div class="modal-search-container">
+                    <input type="text" id="modalSearch" placeholder="Search in sorted files...">
+                    <i class="fas fa-search"></i>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-category="images">Images</button>
+                    <button class="tab-btn" data-category="documents">Documents</button>
+                    <button class="tab-btn" data-category="videos">Videos</button>
+                    <button class="tab-btn" data-category="audio">Audio</button>
+                    <button class="tab-btn" data-category="archives">Archives</button>
+                    <button class="tab-btn" data-category="others">Others</button>
+                </div>
+                
+                <div class="tab-content">
+                    <div id="images" class="category-content active">
+                        <h3>Images <i class="fas fa-images"></i></h3>
+                        <div class="sorted-files-grid" id="imagesGrid"></div>
+                    </div>
+                    
+                    <div id="documents" class="category-content">
+                        <h3>Documents <i class="fas fa-file-alt"></i></h3>
+                        <div class="sorted-files-list" id="documentsList"></div>
+                    </div>
+                    
+                    <div id="videos" class="category-content">
+                        <h3>Videos <i class="fas fa-video"></i></h3>
+                        <div class="sorted-files-grid" id="videosGrid"></div>
+                    </div>
+                    
+                    <div id="audio" class="category-content">
+                        <h3>Audio <i class="fas fa-music"></i></h3>
+                        <div class="sorted-files-list" id="audioList"></div>
+                    </div>
+                    
+                    <div id="archives" class="category-content">
+                        <h3>Archives <i class="fas fa-file-archive"></i></h3>
+                        <div class="sorted-files-list" id="archivesList"></div>
+                    </div>
+                    
+                    <div id="others" class="category-content">
+                        <h3>Others <i class="fas fa-file"></i></h3>
+                        <div class="sorted-files-list" id="othersList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- File Details Modal -->
+        <div id="fileDetailsModal" class="modal">
+            <div class="modal-content file-details-content">
+                <span class="close-btn" id="closeFileDetails">&times;</span>
+                <h2>File Details</h2>
+                <div id="fileDetailsContent"></div>
+            </div>
+        </div>
+        
+        <!-- Bulk Download Modal -->
+        <div id="bulkDownloadModal" class="modal">
+            <div class="modal-content bulk-download-content">
+                <span class="close-btn" id="closeBulkDownload">&times;</span>
+                <h2>Bulk Download</h2>
+                <p>Select categories to download:</p>
+                <div class="bulk-download-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bulkImages" checked>
+                        <span class="checkmark"></span>
+                        Images
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bulkDocuments" checked>
+                        <span class="checkmark"></span>
+                        Documents
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bulkVideos" checked>
+                        <span class="checkmark"></span>
+                        Videos
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bulkAudio" checked>
+                        <span class="checkmark"></span>
+                        Audio
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bulkArchives" checked>
+                        <span class="checkmark"></span>
+                        Archives
+                    </label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bulkOthers" checked>
+                        <span class="checkmark"></span>
+                        Others
+                    </label>
+                </div>
+                <button id="downloadSelectedBtn" class="download-selected-btn">
+                    <i class="fas fa-download"></i> Download Selected
+                </button>
+            </div>
+        </div>
+        
+        <!-- Theme Switcher -->
+        <div class="theme-switcher">
+            <button id="lightTheme" class="theme-btn active" title="Light Theme">
+                <i class="fas fa-sun"></i>
+            </button>
+            <button id="darkTheme" class="theme-btn" title="Dark Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="blueTheme" class="theme-btn" title="Blue Theme">
+                <i class="fas fa-tint"></i>
+            </button>
+        </div>
+        
+        <!-- Statistics Panel -->
+        <div class="stats-panel" id="statsPanel">
+            <div class="stats-header">
+                <h3>File Statistics</h3>
+                <button id="toggleStats" class="toggle-stats-btn">
+                    <i class="fas fa-chart-pie"></i>
+                </button>
+            </div>
+            <div class="stats-content" id="statsContent">
+                <div class="stats-chart-container">
+                    <canvas id="fileTypeChart"></canvas>
+                </div>
+                <div class="stats-info">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Files:</span>
+                        <span class="stat-value" id="totalFiles">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Size:</span>
+                        <span class="stat-value" id="totalSize">0 KB</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Largest File:</span>
+                        <span class="stat-value" id="largestFile">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 File Sorter. All rights reserved.</p>
+    </footer>
+    
+    <!-- Add Chart.js for statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
